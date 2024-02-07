@@ -1,15 +1,24 @@
-import pytest
-from selenium.webdriver.common.by import By
+import re
 
-from pom.searchPage import SearchPage
-from pom.searchResultsPage import SearchResultsPage
 from tests.test_base import TestBase
 
 
 class TestSearch(TestBase):
-    def test_get_titles(self):
-        self.search1 = SearchPage(self.driver)
-        self.search1.search("nice cars")
-        self.search_results = SearchResultsPage(self.driver)
-        for ele in self.search_results.get_titles(self.search_results.search_titles):
-            print(ele.text)
+    def test_atleast_one_image_url_should_contain_domain(self):
+        domain = 'wallpapercave.com'
+        has_domain = False
+        for image in self.image_urls:
+            if domain in image:
+                has_domain = True
+                break
+
+        assert has_domain
+
+    def test_atleast_one_title_should_have_car_or_cars(self):
+        regex = ".*?\\b(?:car|cars)\\b.*?"
+        has_match = False
+        for title in self.title_urls:
+            if re.search(regex, title.text.lower()):
+                has_match = True
+                break
+        assert has_match
