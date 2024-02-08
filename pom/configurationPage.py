@@ -1,8 +1,6 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-""""" This is the parent for all POM  & contains base methods"""
-
 
 class ConfigurationPage:
     def __init__(self, driver):
