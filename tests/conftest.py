@@ -8,21 +8,18 @@ from pom.searchPage import SearchPage
 from pom.searchResultsPage import SearchResultsPage
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture
 def init_driver(request):
     web_driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
     web_driver.maximize_window()
     web_driver.get(TestData.Base_Url)
     request.cls.driver = web_driver
     search_page = SearchPage(web_driver)
-    search_page.search("nice cars images")
-    search_result = SearchResultsPage(web_driver)
-    images = search_result.get_images()
-    image_urls = []
-    for image in images:
-        image_urls.append(image.get_attribute('href').split('&iai=')[1])
-    request.cls.image_urls = image_urls
-    request.cls.title_urls = search_result.get_titles()
-
+    search_page.search("nice cartoons images")
+    failed_before = request.session.testsfailed
     yield
+    if request.session.testsfailed != failed_before:
+        test_name = request.node.name
+        print(test_name)
+        web_driver.save_screenshot("C:/Users/alvin/PycharmProjects/matadorPython/screenshots/" + test_name + ".png")
     web_driver.close()
